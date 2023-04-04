@@ -1,0 +1,768 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Martin Wang">
+  <meta name="keywords" content="Love And Freedom">
+  
+    <meta name="description" content="图像信号处理基础一、图像信号基础1.图像表示像素点 2.图像压缩方法JPEG等；  3.常用图像处理方法 二维DFT 二维DWT 二维DCT  二、信息隐藏基本原理1.信息隐藏概念不可视通信，阈下通信$$C 载体对象；M 秘密信息； C’伪装对象；$$ 纯粹安全性：第三方有没有能力将载体对象和伪装对象区分； 2.载体选择冗余空间、声音图像、载体样本使用次数仅1； 三、信息隐藏技术（一）时域替换技术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图像信号处理基础">
+<meta property="og:url" content="http://example.com/2022/10/29/%E5%9B%BE%E5%83%8F%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="Martin&#39;s Blog">
+<meta property="og:description" content="图像信号处理基础一、图像信号基础1.图像表示像素点 2.图像压缩方法JPEG等；  3.常用图像处理方法 二维DFT 二维DWT 二维DCT  二、信息隐藏基本原理1.信息隐藏概念不可视通信，阈下通信$$C 载体对象；M 秘密信息； C’伪装对象；$$ 纯粹安全性：第三方有没有能力将载体对象和伪装对象区分； 2.载体选择冗余空间、声音图像、载体样本使用次数仅1； 三、信息隐藏技术（一）时域替换技术">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/28/b46fcc4dbfac830a.png">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/28/810382446257649f.png">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/29/51d92d5f22626ca7.png">
+<meta property="article:published_time" content="2022-10-29T07:09:00.000Z">
+<meta property="article:modified_time" content="2022-10-29T07:59:07.765Z">
+<meta property="article:author" content="Martin Wang">
+<meta property="article:tag" content="信息隐藏">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s3.bmp.ovh/imgs/2022/10/28/b46fcc4dbfac830a.png">
+  
+  
+  
+  <title>图像信号处理基础 - Martin&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Martin&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="图像信号处理基础"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-29 15:09" pubdate>
+          October 29, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.7k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          14 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">图像信号处理基础</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="图像信号处理基础"><a href="#图像信号处理基础" class="headerlink" title="图像信号处理基础"></a>图像信号处理基础</h1><h3 id="一、图像信号基础"><a href="#一、图像信号基础" class="headerlink" title="一、图像信号基础"></a>一、图像信号基础</h3><h4 id="1-图像表示"><a href="#1-图像表示" class="headerlink" title="1.图像表示"></a>1.图像表示</h4><p>像素点</p>
+<h4 id="2-图像压缩方法"><a href="#2-图像压缩方法" class="headerlink" title="2.图像压缩方法"></a>2.图像压缩方法</h4><p>JPEG等；</p>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/28/b46fcc4dbfac830a.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="3-常用图像处理方法"><a href="#3-常用图像处理方法" class="headerlink" title="3.常用图像处理方法"></a>3.常用图像处理方法</h4><ul>
+<li>二维DFT</li>
+<li>二维DWT</li>
+<li>二维DCT</li>
+</ul>
+<h3 id="二、信息隐藏基本原理"><a href="#二、信息隐藏基本原理" class="headerlink" title="二、信息隐藏基本原理"></a>二、信息隐藏基本原理</h3><h4 id="1-信息隐藏概念"><a href="#1-信息隐藏概念" class="headerlink" title="1.信息隐藏概念"></a>1.信息隐藏概念</h4><p>不可视通信，阈下通信<br>$$<br>C 载体对象；M 秘密信息； C’伪装对象；<br>$$<br><img src="https://s3.bmp.ovh/imgs/2022/10/28/810382446257649f.png" srcset="/img/loading.gif" lazyload></p>
+<p>纯粹安全性：第三方有没有能力将载体对象和伪装对象区分；</p>
+<h4 id="2-载体选择"><a href="#2-载体选择" class="headerlink" title="2.载体选择"></a>2.载体选择</h4><p>冗余空间、声音图像、载体样本使用次数仅1；</p>
+<h3 id="三、信息隐藏技术"><a href="#三、信息隐藏技术" class="headerlink" title="三、信息隐藏技术"></a>三、信息隐藏技术</h3><h4 id="（一）时域替换技术"><a href="#（一）时域替换技术" class="headerlink" title="（一）时域替换技术"></a>（一）时域替换技术</h4><h4 id="1-LSB替换方法"><a href="#1-LSB替换方法" class="headerlink" title="1.LSB替换方法"></a>1.LSB替换方法</h4><p>将样点的最低比特位进行替换；</p>
+<p>替换规则</p>
+<p>同步</p>
+<p>抗干扰<br>$$<br>载体空间{j1,j2.j3…jL(c)},L(c)是载体长度<br>$$</p>
+<p>$$<br>嵌入信息空间{m1,m2,…,mL(m)}, L(c)是载体长度<br>$$</p>
+<p>$$<br>伪装载体空间{j’1,j’2,…,j’L(c’)}   。。。载体长度<br>$$</p>
+<h5 id="算法步骤："><a href="#算法步骤：" class="headerlink" title="算法步骤："></a>算法步骤：</h5><p>（1）嵌入过程</p>
+<ul>
+<li>根据L(m)值选择载体子集；</li>
+<li>将载体子集的每个元素的最低比特位用mi替换；</li>
+</ul>
+<p>（2）提取过程</p>
+<ul>
+<li>找到位置，提取出来，重新排列成mi</li>
+</ul>
+<h5 id="嵌入点选择"><a href="#嵌入点选择" class="headerlink" title="嵌入点选择"></a>嵌入点选择</h5><ul>
+<li>连续方法；</li>
+<li>随机间隔；</li>
+<li>伪随机置换法：共享ket，生成索引序列，将k处的mk隐藏带jk上；如果重复，则选择下一个；</li>
+</ul>
+<h5 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h5><p>优点：简单易于实现，隐藏容量打；</p>
+<p>缺点：安全性不强，鲁棒性不高；不能抵抗有损压缩，滤波，加噪等手段；</p>
+<p>改进：安全性方面对m进行加密处理；鲁棒性方面，多次重复嵌入，增加冗余，或者加上纠错编码；</p>
+<h4 id="2-调色板图像隐藏方法"><a href="#2-调色板图像隐藏方法" class="headerlink" title="2.调色板图像隐藏方法"></a>2.调色板图像隐藏方法</h4><h5 id="图像的组成"><a href="#图像的组成" class="headerlink" title="图像的组成"></a>图像的组成</h5><p>直接像素；    调色板；</p>
+<p>（1）调色板表数据：修改调色表值；</p>
+<p>（2）实际图像点索引值：危险，相邻索引颜色差异会很大；</p>
+<h5 id="灰度图三种颜色必须一起修改"><a href="#灰度图三种颜色必须一起修改" class="headerlink" title="灰度图三种颜色必须一起修改"></a>灰度图三种颜色必须一起修改</h5><p>优缺点：简单，健壮性差；</p>
+<h4 id="3-基于量化编码"><a href="#3-基于量化编码" class="headerlink" title="3.基于量化编码"></a>3.基于量化编码</h4><h4 id="4-二值图像中的信息隐藏"><a href="#4-二值图像中的信息隐藏" class="headerlink" title="4.二值图像中的信息隐藏"></a>4.二值图像中的信息隐藏</h4><p>传真、徽标：冗余信息少；</p>
+<h5 id="Zhao方法：特定区域中黑色图像的个数"><a href="#Zhao方法：特定区域中黑色图像的个数" class="headerlink" title="Zhao方法：特定区域中黑色图像的个数"></a>Zhao方法：特定区域中黑色图像的个数</h5><p>$$<br>区域内黑色数量大于1/2，嵌入0，否则嵌入1；<br>$$</p>
+<p>不能修改太多，需要修改太多的设定为无效项；</p>
+<h6 id="5-游程方法"><a href="#5-游程方法" class="headerlink" title="5.游程方法"></a>5.游程方法</h6><p>m为0，游程长度为偶数，m1，为奇数</p>
+<h4 id="（二）变换域隐藏技术"><a href="#（二）变换域隐藏技术" class="headerlink" title="（二）变换域隐藏技术"></a>（二）变换域隐藏技术</h4><p>在载体重要部位隐藏，抗攻击，不可察觉；</p>
+<h4 id="1-DCT变换"><a href="#1-DCT变换" class="headerlink" title="1.DCT变换"></a>1.DCT变换</h4><p>8*8块，安装Zig-Zag排列，最重要的在前面</p>
+<p>隐藏方法：中频系数修改<br>$$<br>x’(i,j)=x(i,j)+am(i)<br>$$</p>
+<p>$$<br>x’(i,j)=x(i,j)(1+am(i))<br>$$</p>
+<p>需要原图像，经过相减除以a求出m</p>
+<h5 id="利用特定数的相对大小来进行信息隐藏"><a href="#利用特定数的相对大小来进行信息隐藏" class="headerlink" title="利用特定数的相对大小来进行信息隐藏"></a>利用特定数的相对大小来进行信息隐藏</h5><p>伪随机选择<br>$$<br>Bi(u1,v2)   &gt;,     m=1<br>$$</p>
+<p>$$<br>Bi(u2,v2)  &lt;,  m=0<br>$$</p>
+<p>Note:</p>
+<ul>
+<li>当m值大小与m不一致时，大小关系互换；</li>
+<li>互换影响太大就设定为无效项；</li>
+<li>还有三项不等关系的方法；</li>
+</ul>
+<h4 id="2-DWT信息隐藏"><a href="#2-DWT信息隐藏" class="headerlink" title="2.DWT信息隐藏"></a>2.DWT信息隐藏</h4><h5 id="小波变换"><a href="#小波变换" class="headerlink" title="小波变换"></a>小波变换</h5><p>低频部分、水平细节、垂直细节、对角线细节</p>
+<p>类似DCT系数隐藏的方法任然适用；</p>
+<h5 id="图像隐藏算法"><a href="#图像隐藏算法" class="headerlink" title="图像隐藏算法"></a>图像隐藏算法</h5><ul>
+<li>初始化</li>
+<li>小波变换，主要是对低频分量进行隐藏</li>
+<li>矢量量化，映射</li>
+<li>加密和信息隐藏</li>
+</ul>
+<h4 id="3-DFT隐藏方法"><a href="#3-DFT隐藏方法" class="headerlink" title="3.DFT隐藏方法"></a>3.DFT隐藏方法</h4><p>参数有虚数实数，实数部分要求对称；</p>
+<h4 id="4-回声隐藏算法"><a href="#4-回声隐藏算法" class="headerlink" title="4.回声隐藏算法"></a>4.回声隐藏算法</h4><h4 id="5-算法总结"><a href="#5-算法总结" class="headerlink" title="5.算法总结"></a>5.算法总结</h4><ul>
+<li>加密强度高</li>
+<li>健壮性好</li>
+</ul>
+<h4 id="（三）文件格式隐藏法"><a href="#（三）文件格式隐藏法" class="headerlink" title="（三）文件格式隐藏法"></a>（三）文件格式隐藏法</h4><h5 id="BMP文件格式隐藏"><a href="#BMP文件格式隐藏" class="headerlink" title="BMP文件格式隐藏"></a>BMP文件格式隐藏</h5><p>会改变文件大小</p>
+<h4 id="（四）可逆信息隐藏实例"><a href="#（四）可逆信息隐藏实例" class="headerlink" title="（四）可逆信息隐藏实例"></a>（四）可逆信息隐藏实例</h4><h4 id="1-基于直方图平移的可逆信息隐藏"><a href="#1-基于直方图平移的可逆信息隐藏" class="headerlink" title="1.基于直方图平移的可逆信息隐藏"></a>1.基于直方图平移的可逆信息隐藏</h4><ul>
+<li>确定直方图峰值点和谷点，峰值点表示图像中样点值最多的数值点；选择峰值点整体右移直方图的目的是，空出取值最多的样点，提高嵌入容量；</li>
+<li>直方图右移；</li>
+</ul>
+<p><img src="https://s3.bmp.ovh/imgs/2022/10/29/51d92d5f22626ca7.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li><p>针对直方图空隙进行信息嵌入，嵌入规则如下：<br>$$<br>若嵌入的bit为1,则将pp的值+1；<br>$$</p>
+<p>$$<br>若嵌入的比特为0，则pp值不变；<br>$$</p>
+<p>详细链接：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/q15516221118/article/details/113617278">https://blog.csdn.net/q15516221118/article/details/113617278</a></p>
+</li>
+</ul>
+<h3 id="三、信息隐藏分析"><a href="#三、信息隐藏分析" class="headerlink" title="三、信息隐藏分析"></a>三、信息隐藏分析</h3><h4 id="1-基本分析步骤"><a href="#1-基本分析步骤" class="headerlink" title="1.基本分析步骤"></a>1.基本分析步骤</h4><ol>
+<li>检测是否藏有秘密信息；</li>
+<li>如果有，如何进行秘密信息的提取；怎样在不被接受者发现的情况下破坏；</li>
+</ol>
+<h4 id="2-发现隐藏信息"><a href="#2-发现隐藏信息" class="headerlink" title="2.发现隐藏信息"></a>2.发现隐藏信息</h4><ul>
+<li><p>时域隐藏，变换域隐藏，统计等；</p>
+</li>
+<li><p>根据可能的方法判断分析载体的变化来判断是否有信息的隐藏；</p>
+</li>
+<li><p>LSB方法：主观上，查看有无明显的变化；客观上，统计分析噪声特性；</p>
+</li>
+<li><p>调色板方法：一般调色板按照颜色的使用多少排列。是否违反或者有很多空余的调色板索引；</p>
+</li>
+<li><p>变换域方法：尝试变换查找；</p>
+</li>
+<li><p>变形技术：主管分析；</p>
+</li>
+<li><p>载体生成技术：是否符合人类阅读习惯；</p>
+</li>
+<li><p>文件隐藏：文件大小是否异常；</p>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/" class="category-chain-item">信息隐藏</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E4%BF%A1%E6%81%AF%E9%9A%90%E8%97%8F/">#信息隐藏</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>图像信号处理基础</div>
+      <div>http://example.com/2022/10/29/图像信号处理基础/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Martin Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 29, 2022</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/29/%E6%95%B0%E5%AD%97%E6%B0%B4%E5%8D%B0/" title="数字水印">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">数字水印</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/27/Axios%E8%AF%A6%E8%A7%A3/" title="Axios详解">
+                        <span class="hidden-mobile">Axios详解</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.9},"log":false});</script></body>
+</html>

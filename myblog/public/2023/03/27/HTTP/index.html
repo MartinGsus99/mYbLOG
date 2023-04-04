@@ -1,0 +1,783 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Martin Wang">
+  <meta name="keywords" content="Love And Freedom">
+  
+    <meta name="description" content="HTTPS实用指南一、初识1.背景知识输入网址获得网页的过程？  HTTP发展 2.报文内容 1常用请求头   1常用响应头   3. Methods  安全的（不会修改服务器数据）：GET HEAD OPTIONS 幂等（同样的请求执行一次和多次的效果是一致的）：所有安全的方法都是幂等的+PUT DELETE；  4.状态码 5. Restful API 每一种URL代表一种资源； 客户端和服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTPS实用指南">
+<meta property="og:url" content="http://example.com/2023/03/27/HTTP/index.html">
+<meta property="og:site_name" content="Martin&#39;s Blog">
+<meta property="og:description" content="HTTPS实用指南一、初识1.背景知识输入网址获得网页的过程？  HTTP发展 2.报文内容 1常用请求头   1常用响应头   3. Methods  安全的（不会修改服务器数据）：GET HEAD OPTIONS 幂等（同样的请求执行一次和多次的效果是一致的）：所有安全的方法都是幂等的+PUT DELETE；  4.状态码 5. Restful API 每一种URL代表一种资源； 客户端和服务">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/f6ce5b862569e192.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/bd303c5375ece729.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/eb7f13f8f1a5596c.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/1848c837bc2cf08d.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/08fd49af7f73a5af.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/83884b861c15d41f.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/86f6032a7181310d.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/377079155bbec1bc.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/65a645bc76884d65.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/1bd6b0f0379d4254.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/f2c87718dc00674c.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/e85b4b47fe56a57a.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/d6e3190e2ebe64b2.jpg">
+<meta property="og:image" content="https://pic.imgdb.cn/item/63dc762107d5ca72062d5196.jpg">
+<meta property="og:image" content="https://s3.bmp.ovh/imgs/2023/02/03/2ed3f548ffca14ab.jpg">
+<meta property="og:image" content="https://pic.imgdb.cn/item/63dc76b007d5ca72062e430c.jpg">
+<meta property="og:image" content="https://pic.imgdb.cn/item/63dc76fe07d5ca72062e9fdb.jpg">
+<meta property="og:image" content="https://pic.imgdb.cn/item/63dc79d407d5ca7206341e84.jpg">
+<meta property="og:image" content="https://pic.imgdb.cn/item/63dc7a1507d5ca7206351481.jpg">
+<meta property="article:published_time" content="2023-03-27T10:51:45.000Z">
+<meta property="article:modified_time" content="2023-03-27T11:05:18.316Z">
+<meta property="article:author" content="Martin Wang">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="计算机网络">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s3.bmp.ovh/imgs/2023/02/03/f6ce5b862569e192.jpg">
+  
+  
+  
+  <title>HTTPS实用指南 - Martin&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Martin&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="HTTPS实用指南"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-27 18:51" pubdate>
+          March 27, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">HTTPS实用指南</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="HTTPS实用指南"><a href="#HTTPS实用指南" class="headerlink" title="HTTPS实用指南"></a>HTTPS实用指南</h1><h2 id="一、初识"><a href="#一、初识" class="headerlink" title="一、初识"></a>一、初识</h2><h3 id="1-背景知识"><a href="#1-背景知识" class="headerlink" title="1.背景知识"></a>1.背景知识</h3><p>输入网址获得网页的过程？</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/02/03/f6ce5b862569e192.jpg" srcset="/img/loading.gif" lazyload></p>
+<h5 id="HTTP发展"><a href="#HTTP发展" class="headerlink" title="HTTP发展"></a>HTTP发展</h5><p><img src="https://s3.bmp.ovh/imgs/2023/02/03/bd303c5375ece729.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="2-报文内容"><a href="#2-报文内容" class="headerlink" title="2.报文内容"></a>2.报文内容</h3><p><img src="https://s3.bmp.ovh/imgs/2023/02/03/eb7f13f8f1a5596c.jpg" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">常用请求头<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s3.bmp.ovh/imgs/2023/02/03/1848c837bc2cf08d.jpg" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">常用响应头<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s3.bmp.ovh/imgs/2023/02/03/08fd49af7f73a5af.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="3-Methods"><a href="#3-Methods" class="headerlink" title="3. Methods"></a>3. Methods</h3><p><img src="https://s3.bmp.ovh/imgs/2023/02/03/83884b861c15d41f.jpg" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>安全的（不会修改服务器数据）：GET HEAD OPTIONS</li>
+<li>幂等（同样的请求执行一次和多次的效果是一致的）：所有安全的方法都是幂等的+PUT DELETE；</li>
+</ul>
+<h3 id="4-状态码"><a href="#4-状态码" class="headerlink" title="4.状态码"></a>4.状态码</h3><p><img src="https://s3.bmp.ovh/imgs/2023/02/03/86f6032a7181310d.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="5-Restful-API"><a href="#5-Restful-API" class="headerlink" title="5. Restful API"></a>5. Restful API</h3><ul>
+<li>每一种URL代表一种资源；</li>
+<li>客户端和服务器之间，传递这种资源的某种表现层；</li>
+<li>客户端通过HTTP Methods,对服务端资源进行操作，实现“表现层状态转化”；</li>
+</ul>
+<p><img src="https://s3.bmp.ovh/imgs/2023/02/03/377079155bbec1bc.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="6-缓存"><a href="#6-缓存" class="headerlink" title="6.缓存"></a>6.缓存</h3><p><img src="https://s3.bmp.ovh/imgs/2023/02/03/65a645bc76884d65.jpg" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>强缓存资源本地有就直接用本地资源</li>
+<li>协商缓存即使本地有缓存，但是还是需要和server端进行通信确认是否最新等；</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">缓存流程示意<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s3.bmp.ovh/imgs/2023/02/03/1bd6b0f0379d4254.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="7-Cookie"><a href="#7-Cookie" class="headerlink" title="7. Cookie"></a>7. Cookie</h3><p><img src="https://s3.bmp.ovh/imgs/2023/02/03/f2c87718dc00674c.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="8-HTTP-2"><a href="#8-HTTP-2" class="headerlink" title="8. HTTP/2"></a>8. HTTP/2</h3><blockquote>
+<p>更快、更稳定、更简单</p>
+</blockquote>
+<ul>
+<li>使用帧作为通信的最小单位，每个帧都包含头，至少回标识出当前帧所属的数据流；</li>
+<li>采用二进制编码，效率更高，有更好的压缩算法；</li>
+<li>消息：与逻辑请求或者响应消息对应的完整的一系列帧；</li>
+<li>数据流：已建立的连接内双向字节流，可以承载一条或多条消息；</li>
+<li>交错发送，接收方重组织；</li>
+<li>链接都是永久的，而且仅需要每个来源一个连接；</li>
+<li>流控制：阻止发送方向接收方发送大量数据的机制（似乎可以防范DDOS？）</li>
+</ul>
+<p><img src="https://s3.bmp.ovh/imgs/2023/02/03/e85b4b47fe56a57a.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="9-HTTPS"><a href="#9-HTTPS" class="headerlink" title="9.  HTTPS"></a>9.  HTTPS</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">经过TSL/SSL加密<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s3.bmp.ovh/imgs/2023/02/03/d6e3190e2ebe64b2.jpg" srcset="/img/loading.gif" lazyload></p>
+<h2 id="二、HTTP协议的应用场景分析"><a href="#二、HTTP协议的应用场景分析" class="headerlink" title="二、HTTP协议的应用场景分析"></a>二、HTTP协议的应用场景分析</h2><h3 id="1-静态资源"><a href="#1-静态资源" class="headerlink" title="1.静态资源"></a>1.静态资源</h3><figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arcade">方案：缓存+CDN+文件名<span class="hljs-built_in">Hash</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>CDN (Content Delivery Network) :通过用户就近性和服务器负载进行判断，提供快速服务；CDN复杂解决文件加载快慢；</li>
+<li>文件名Hash来保证每次刷新获得的资源是最新的；</li>
+</ul>
+<h3 id="2-登录"><a href="#2-登录" class="headerlink" title="2.登录"></a>2.登录</h3><p>头条页面密码登录会发出两个请求；</p>
+<ul>
+<li>请求1的Methods是OPTIONS：跨域、cross-origin</li>
+</ul>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs delphi">一个url由scheme+host <span class="hljs-keyword">name</span>+port组成<br>e.g. https:<span class="hljs-comment">//www.example.com:443</span><br>跨域：scheme、host <span class="hljs-keyword">name</span>、prot任意一个有区别都认为是跨域；<br>Note：如果https没有写明<span class="hljs-number">443</span>端口号也可以认为是同域；http默认<span class="hljs-number">80</span>；port可以不写；<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>跨域</li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/63dc762107d5ca72062d5196.jpg" srcset="/img/loading.gif" lazyload></p>
+<h5 id="跨域解决方案："><a href="#跨域解决方案：" class="headerlink" title="跨域解决方案："></a>跨域解决方案：</h5><ul>
+<li>CORS</li>
+<li>代理服务器：同源策略是浏览器的安全策略，不是http的</li>
+</ul>
+<p><img src="https://s3.bmp.ovh/imgs/2023/02/03/2ed3f548ffca14ab.jpg" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>IFrame：存在诸多不便；</li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/63dc76b007d5ca72062e430c.jpg" srcset="/img/loading.gif" lazyload></p>
+<h5 id="鉴权"><a href="#鉴权" class="headerlink" title="鉴权"></a>鉴权</h5><ul>
+<li>session+cookie</li>
+<li>JWT（JSON web token）token具有唯一性；</li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/63dc76fe07d5ca72062e9fdb.jpg" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>SSO（Single Sign On）：单点登录</li>
+</ul>
+<p>重定向到子站就进行登录态查询，登陆在线则可以继续访问；不在线跳转到SSO登录后继续访问；</p>
+<h2 id="三、实战"><a href="#三、实战" class="headerlink" title="三、实战"></a>三、实战</h2><h3 id="1-Ajax之XHR"><a href="#1-Ajax之XHR" class="headerlink" title="1. Ajax之XHR"></a>1. Ajax之XHR</h3><h3 id="2-常用请求库Axios（参考官网）"><a href="#2-常用请求库Axios（参考官网）" class="headerlink" title="2.常用请求库Axios（参考官网）"></a>2.常用请求库Axios（参考官网）</h3><h3 id="3-网络优化（需要补充）"><a href="#3-网络优化（需要补充）" class="headerlink" title="3.网络优化（需要补充）"></a>3.网络优化（需要补充）</h3><p><img src="https://pic.imgdb.cn/item/63dc79d407d5ca7206341e84.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="4-稳定性"><a href="#4-稳定性" class="headerlink" title="4.稳定性"></a>4.稳定性</h3><ul>
+<li>重试是保证稳定性的有效手段，但是要防止滥用，导致server情况更加恶劣；</li>
+<li>缓存合理使用，作为最后一道防线；</li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/63dc7a1507d5ca7206351481.jpg" srcset="/img/loading.gif" lazyload></p>
+<h2 id="四、拓展"><a href="#四、拓展" class="headerlink" title="四、拓展"></a>四、拓展</h2><h3 id="1-Websocket"><a href="#1-Websocket" class="headerlink" title="1.Websocket"></a>1.Websocket</h3><ul>
+<li>进行全双工的通讯；</li>
+<li>实时性要求较高，例如聊天室；（开启聊天室demo）</li>
+<li>url使用ws:// 或者 wss：//</li>
+</ul>
+<h3 id="2-QUIC（Quick-UDP-Internet-Connection）"><a href="#2-QUIC（Quick-UDP-Internet-Connection）" class="headerlink" title="2.QUIC（Quick UDP Internet Connection）"></a>2.QUIC（Quick UDP Internet Connection）</h3><ul>
+<li>相比于TCP更快；</li>
+<li>可靠性类似于TCP；</li>
+<li>支持h2的多路复用，没有TCP的HOL文通；</li>
+<li>前向纠错FEC</li>
+<li>用户空间的阻塞算法，最新的BBR算法；</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%89%8D%E7%AB%AF/" class="category-chain-item">前端</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%AC%94%E8%AE%B0/">#笔记</a>
+      
+        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">#计算机网络</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>HTTPS实用指南</div>
+      <div>http://example.com/2023/03/27/HTTP/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Martin Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>March 27, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/27/%E6%91%84%E5%BD%B1%E6%97%A5%E5%B8%B8/" title="摄影日常">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">摄影日常</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/27/NextJS/" title="Next">
+                        <span class="hidden-mobile">Next</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.9},"log":false});</script></body>
+</html>

@@ -1,0 +1,670 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Martin Wang">
+  <meta name="keywords" content="Love And Freedom">
+  
+    <meta name="description" content="CH1 顺序表基本操作及实现（C） 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959">
+<meta property="og:type" content="article">
+<meta property="og:title" content="顺序表">
+<meta property="og:url" content="http://example.com/2021/08/08/CH1%20%E9%A1%BA%E5%BA%8F%E8%A1%A8%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E5%8F%8A%E5%AE%9E%E7%8E%B0%EF%BC%88C%EF%BC%89/index.html">
+<meta property="og:site_name" content="Martin&#39;s Blog">
+<meta property="og:description" content="CH1 顺序表基本操作及实现（C） 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-08-08T12:57:45.000Z">
+<meta property="article:modified_time" content="2021-08-15T14:55:04.000Z">
+<meta property="article:author" content="Martin Wang">
+<meta property="article:tag" content="C语言">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>顺序表 - Martin&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Martin&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="顺序表"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-08-08 20:57" pubdate>
+          August 8, 2021 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.1k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          60 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">顺序表</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>CH1 顺序表基本操作及实现（C）</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-meta">#include&lt;stdio.h&gt;</span><br><span class="hljs-meta">#include&lt;stdlib.h&gt;</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> MAXSIZE 50</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> Elemtype int </span><br><br>typedef <span class="hljs-keyword">struct</span>&#123;<br>    Elemtype data[MAXSIZE];<br>    <span class="hljs-built_in">int</span> length;<br>&#125;Sqlist;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">InitSqlist</span>(<span class="hljs-params">Sqlist *L</span>)</span><br>&#123;<br>    L-&gt;length=<span class="hljs-number">0</span>;<br>    printf(<span class="hljs-string">&quot;Init the list successfully!\n&quot;</span>);<br>    <span class="hljs-keyword">return</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">CreateSqlist</span>(<span class="hljs-params">Sqlist *L,<span class="hljs-built_in">int</span> temp_data[],<span class="hljs-built_in">int</span> temp_length</span>)</span><br>&#123;<br>    <span class="hljs-keyword">if</span>(temp_length&gt;MAXSIZE)<br>    &#123;<br>        printf(<span class="hljs-string">&quot;Overflow!\n&quot;</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">for</span>(<span class="hljs-built_in">int</span> index=<span class="hljs-number">0</span>;index&lt;temp_length;index++)<br>    &#123;<br>        L-&gt;data[index]=temp_data[index];<br>    &#125;<br>    L-&gt;length=temp_length;<br>    printf(<span class="hljs-string">&quot;Create the table successfully!\n&quot;</span>);<br>    <span class="hljs-keyword">return</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">InsertList</span>(<span class="hljs-params">Sqlist *L,Elemtype newData,<span class="hljs-built_in">int</span> temp_position</span>)</span><br>&#123;<br>    <span class="hljs-keyword">if</span>(temp_position&lt;<span class="hljs-number">0</span>||temp_position&gt;L-&gt;length+<span class="hljs-number">1</span>)<br>    &#123;<br>        printf(<span class="hljs-string">&quot;Wrong position!\n&quot;</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-keyword">else</span><br>    &#123;<br>        <span class="hljs-keyword">for</span>(<span class="hljs-built_in">int</span> index=L-&gt;length;index&gt;temp_position;index--)<br>        &#123;<br>            L-&gt;data[index]=L-&gt;data[index<span class="hljs-number">-1</span>];<br>        &#125;<br>        L-&gt;data[temp_position]=newData;<br>        printf(<span class="hljs-string">&quot;Add new data successfully!\n&quot;</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">DeleteDataByElement</span>(<span class="hljs-params">Sqlist *L,Elemtype deletedData</span>)</span><br>&#123;<br>    <span class="hljs-built_in">int</span> counter=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-built_in">int</span> index=<span class="hljs-number">0</span>;index&lt;L-&gt;length<span class="hljs-number">-1</span>;index++)<br>    &#123;<br>        <span class="hljs-keyword">if</span>(L-&gt;data[index]==deletedData)<br>        &#123;<br>            counter+=<span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">for</span>(<span class="hljs-built_in">int</span> index1=index;index1&lt;L-&gt;length<span class="hljs-number">-1</span>;index1++)<br>            &#123;<br>                L-&gt;data[index1]=L-&gt;data[index1+<span class="hljs-number">1</span>];<br>            &#125;<br>        &#125;<br>    &#125;<br>    L-&gt;length-=counter;<br>    printf(<span class="hljs-string">&quot;The counter is %d\n&quot;</span>,counter);<br>    printf(<span class="hljs-string">&quot;Delete the data successfully!\n&quot;</span>);<br>    <span class="hljs-keyword">return</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">DeleteDataByPosition</span>(<span class="hljs-params">Sqlist *L,<span class="hljs-built_in">int</span> tempDeletePosition</span>)</span><br>&#123;<br>    Elemtype deleted_data;<br>    <span class="hljs-keyword">if</span>(tempDeletePosition&lt;<span class="hljs-number">0</span>||tempDeletePosition&gt;L-&gt;length)<br>    &#123;<br>        printf(<span class="hljs-string">&quot;Wrong position!\n&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">else</span>&#123;<br>        deleted_data=L-&gt;data[tempDeletePosition];<br>        <span class="hljs-keyword">for</span>(<span class="hljs-built_in">int</span> index=tempDeletePosition;index&lt;L-&gt;length;index++)<br>        &#123;<br><br>            L-&gt;data[index]=L-&gt;data[index+<span class="hljs-number">1</span>];<br>        &#125;<br>        L-&gt;length--;<br>    &#125;<br>    printf(<span class="hljs-string">&quot;Delete the data successfully!\n&quot;</span>);<br>    printf(<span class="hljs-string">&quot;The deleted data is %d\n&quot;</span>,deleted_data);<br>    <span class="hljs-keyword">return</span>;<br>&#125;<br><br><span class="hljs-comment">//按值查找</span><br><span class="hljs-function"><span class="hljs-built_in">int</span> <span class="hljs-title">Locate_Data</span>(<span class="hljs-params">Linklist L,ElemType targetData</span>)</span><br>&#123;<br>    LNode *p;<br>    p=L-&gt;next;<br>    <span class="hljs-built_in">int</span> index=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span>(p)<br>    &#123;<br>        <span class="hljs-keyword">if</span>(p-&gt;data==targetData)<br>        &#123;<br>            printf(<span class="hljs-string">&quot;Position:%d.\n&quot;</span>,index);<br>            <span class="hljs-keyword">return</span> index;<br>        &#125;<br>        index++;<br>        p=p-&gt;next;<br>    &#125;<br>    printf(<span class="hljs-string">&quot;No such a data.\n&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>&#125;<br><br><span class="hljs-comment">//计算链表长度</span><br><span class="hljs-function"><span class="hljs-built_in">int</span> <span class="hljs-title">CountLinklistLength</span>(<span class="hljs-params">Linklist L</span>)</span><br>&#123;<br>    <span class="hljs-built_in">int</span> count=<span class="hljs-number">0</span>;<br>    LNode *p;<br>    p=L-&gt;next;<br>    <span class="hljs-keyword">while</span>(p)<br>    &#123;<br>        count++;<br>        p=p-&gt;next;<br>    &#125;<br>    printf(<span class="hljs-string">&quot;List length : %d.\n&quot;</span>,count);<br>    <span class="hljs-keyword">return</span> count;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">PrintList</span>(<span class="hljs-params">Sqlist *L</span>)</span><br>&#123;<br>    printf(<span class="hljs-string">&quot;The list is below:\n&quot;</span>);<br>    <span class="hljs-keyword">for</span>(<span class="hljs-built_in">int</span> index=<span class="hljs-number">0</span>;index&lt;L-&gt;length;index++)<br>    &#123;<br>        printf(<span class="hljs-string">&quot;%d &quot;</span>,L-&gt;data[index]);<br>    &#125;<br>    printf(<span class="hljs-string">&quot;\nThe length is %d\n&quot;</span>,L-&gt;length);<br>    <span class="hljs-keyword">return</span>;<br>&#125;<br><br><span class="hljs-comment">//不确定是否正确</span><br><span class="hljs-comment">// void EmptyList(Sqlist *L)</span><br><span class="hljs-comment">// &#123;</span><br><span class="hljs-comment">//     free(L-&gt;data);</span><br><span class="hljs-comment">//     L-&gt;length=0;</span><br><span class="hljs-comment">//     return;</span><br><span class="hljs-comment">// &#125;</span><br><br><br><br><span class="hljs-function"><span class="hljs-built_in">int</span> <span class="hljs-title">main</span>()</span>&#123;<br>    <span class="hljs-built_in">int</span> my_data[MAXSIZE]=&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">4</span>,<span class="hljs-number">3</span>,<span class="hljs-number">22</span>,<span class="hljs-number">1</span>&#125;;<br>    <span class="hljs-built_in">int</span> my_length=<span class="hljs-number">10</span>;<br>    Sqlist my_list;<br>    Elemtype insertData=<span class="hljs-number">10</span>;<br>    <span class="hljs-built_in">int</span> my_new_position=<span class="hljs-number">3</span>;<br>    <span class="hljs-built_in">int</span> my_abandoned_data=<span class="hljs-number">3</span>;<br>    <span class="hljs-built_in">int</span> my_deleted_position=<span class="hljs-number">2</span>;<br><br>    InitSqlist(&amp;my_list);<br>    CreateSqlist(&amp;my_list,my_data,my_length);<br>    InsertList(&amp;my_list,insertData,my_new_position);<br>    PrintList(&amp;my_list);<br>    DeleteDataByElement(&amp;my_list,my_abandoned_data);<br>    DeleteDataByPosition(&amp;my_list,my_deleted_position);<br>    <span class="hljs-comment">// EmptyList(&amp;my_list);</span><br>    PrintList(&amp;my_list);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>统一使用头节点后的代码实现：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function">Linklist <span class="hljs-title">Create_Linklist</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> n</span>)</span><br>&#123;<br>    LNode *L,*p,*q;<br>    <span class="hljs-built_in">int</span> i;<br>    L=(LNode*)malloc(<span class="hljs-keyword">sizeof</span>(LNode));<br>    L-&gt;next=NULL;           <span class="hljs-comment">//Head node;</span><br>    q=L;                    <span class="hljs-comment">//q-&gt;L;</span><br>    <span class="hljs-keyword">for</span>(i=<span class="hljs-number">0</span>;i&lt;n;i++)<br>    &#123;<br>        p=(LNode*)malloc(<span class="hljs-keyword">sizeof</span>(LNode));<br>        printf(<span class="hljs-string">&quot;Pelase enter data %d:&quot;</span>,i);<br>        scanf(<span class="hljs-string">&quot;%d&quot;</span>,&amp;p-&gt;data);			 <span class="hljs-comment">//q=L,p赋值</span><br>        p-&gt;next=NULL;					<span class="hljs-comment">//q=L, p-&gt;NULL</span><br>        q-&gt;next=p;						<span class="hljs-comment">//q-&gt;p-&gt;NULL==L-&gt;p-&gt;null;</span><br>        q=p;							<br>    &#125;									<br>    <span class="hljs-keyword">return</span> L;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-built_in">int</span> <span class="hljs-title">InsertData</span>(<span class="hljs-params">Linklist L,ElemType data,<span class="hljs-built_in">int</span> pos</span>)</span><br>&#123;<br>    LNode *p,*s;<br>    <span class="hljs-built_in">int</span> index;<br>    p=L;<br>    index=<span class="hljs-number">-1</span>;						<span class="hljs-comment">//index设置为-1，则从0开始计算链表长度</span><br>    <span class="hljs-keyword">while</span>(p&amp;&amp;index&lt;pos<span class="hljs-number">-1</span>)			<span class="hljs-comment">//循环找到目标元素的前一个元素</span><br>    &#123;<br>        p=p-&gt;next;<br>        index++;<br>    &#125;<br>    <span class="hljs-keyword">if</span>(!p||index&gt;pos<span class="hljs-number">-1</span>)				<span class="hljs-comment">//p的下一个为空则不存在；index大于pos则出错；</span><br>    &#123;<br>        printf(<span class="hljs-string">&quot;Wrong position.\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    s=(LNode*)malloc(<span class="hljs-keyword">sizeof</span>(LNode));	<span class="hljs-comment">//创建新空间</span><br>    s-&gt;data=data;					<br>    s-&gt;next=p-&gt;next;			<span class="hljs-comment">//s=target</span><br>    p-&gt;next=s;					<span class="hljs-comment">//p-&gt;s,s-&gt;target</span><br>    printf(<span class="hljs-string">&quot;Insert the data successfully.\n&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-built_in">int</span> <span class="hljs-title">DeleteData</span>(<span class="hljs-params">Linklist L,ElemType *e,<span class="hljs-built_in">int</span> pos</span>)   <span class="hljs-comment">//*e可以获得目标元素的地址</span></span><br>&#123;<br>    LNode *p,*q;<br>    p=L-&gt;next;							<br>    <span class="hljs-built_in">int</span> index=<span class="hljs-number">-1</span>;<br>    <span class="hljs-keyword">while</span>(p-&gt;next&amp;&amp;index&lt;pos<span class="hljs-number">-1</span>)<br>    &#123;<br>        p=p-&gt;next;<br>        index++;<br>    &#125;<br>    <span class="hljs-keyword">if</span>(!(p-&gt;next)||index&gt;pos<span class="hljs-number">-1</span>)<br>    &#123;<br>        printf(<span class="hljs-string">&quot;Wrong position.\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    q=p-&gt;next;<br>    *e=q-&gt;data;					<span class="hljs-comment">//将data传入e</span><br>    p-&gt;next=q-&gt;next;<br>    free(q);<br>    printf(<span class="hljs-string">&quot;Get the data: %d\n&quot;</span>,*e);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br><br>&#125;<br><br><span class="hljs-comment">//合并两个有序链表，且合成的链表也是顺序的</span><br><span class="hljs-function">Linklist <span class="hljs-title">MergeLinklist</span>(<span class="hljs-params">Linklist A,Linklist B</span>)</span><br>&#123;<br>    LNode *pa,*pb,*pc,*C;<br>    pa=A-&gt;next;<br>    pb=B-&gt;next;<br>    C=pc=A;						<span class="hljs-comment">//C=A</span><br>    <span class="hljs-keyword">while</span>(pa&amp;&amp;pb)<br>    &#123;<br>        <span class="hljs-keyword">if</span>(pa-&gt;data&lt;=pb-&gt;data)<br>        &#123;<br>            pc-&gt;next=pa;		<span class="hljs-comment">//c-&gt;a1;</span><br>            pc=pa;				<span class="hljs-comment">//c=a1;</span><br>            pa=pa-&gt;next;		<span class="hljs-comment">//a1=a2</span><br>        &#125;<br>        <span class="hljs-keyword">else</span><br>        &#123;<br>            pc-&gt;next=pb;<br>            pc=pb;<br>            pb=pb-&gt;next;<br>        &#125;<br>    &#125;<br>    pc-&gt;next=pa?pa:pb;<br>    free(B);<br>    <span class="hljs-keyword">return</span> C;<br><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">PrintLinklist</span>(<span class="hljs-params">Linklist L</span>)</span><br>&#123;<br>    LNode *p;<br>    p=L-&gt;next;<br>    printf(<span class="hljs-string">&quot;DATA OUTPUT:&quot;</span>);<br>    <span class="hljs-keyword">while</span>(p)<br>    &#123;<br>        printf(<span class="hljs-string">&quot;%d &quot;</span>,p-&gt;data);<br>        p=p-&gt;next;<br>    &#125;<br>    printf(<span class="hljs-string">&quot;\n&quot;</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-built_in">int</span> <span class="hljs-title">main</span>()</span><br>&#123;<br>    <span class="hljs-built_in">int</span> e;<br><br>    Linklist MyLinklist;<br>    MyLinklist=Create_Linklist(<span class="hljs-number">5</span>);<br>    PrintLinklist(MyLinklist);<br>    InsertData(MyLinklist,<span class="hljs-number">101</span>,<span class="hljs-number">3</span>);<br>    PrintLinklist(MyLinklist);<br>    DeleteData(MyLinklist,&amp;e,<span class="hljs-number">3</span>);    <span class="hljs-comment">//Use &amp; to get data;</span><br>    PrintLinklist(MyLinklist);<br><br><br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>二、双向链表</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><br><span class="hljs-keyword">typedef</span> <span class="hljs-type">int</span> Elemtype;<br><br><span class="hljs-comment">//节点结构</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">DulNode</span>&#123;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">DulNode</span> * <span class="hljs-title">prior</span>;</span><br>    <span class="hljs-type">int</span> data;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">DulNode</span> * <span class="hljs-title">next</span>;</span><br>&#125;DulNode,*DulLinkList;<br><br>DulNode* <span class="hljs-title function_">initDulNode</span><span class="hljs-params">(DulNode * L,<span class="hljs-type">int</span> length)</span>&#123;<br>    <span class="hljs-comment">//创建一个首元节点，链表的头指针为L</span><br>    L=(DulNode*)<span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(DulNode));<br>    <span class="hljs-comment">//对节点进行初始化</span><br>    L-&gt;prior=<span class="hljs-literal">NULL</span>;<br>    L-&gt;next=<span class="hljs-literal">NULL</span>;<br>    L-&gt;data=<span class="hljs-literal">NULL</span>;<br>    <span class="hljs-comment">//声明一个指向首元节点的指针，方便后期向链表中添加新创建的节点</span><br>    DulNode *r=L;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> count=<span class="hljs-number">0</span>; count&lt;length; count++) &#123;<br>        <span class="hljs-comment">//创建新的节点并初始化</span><br>        DulNode *p=(DulNode*)<span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(DulNode));<br>        p-&gt;prior=<span class="hljs-literal">NULL</span>;<br>        p-&gt;next=<span class="hljs-literal">NULL</span>;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Please enter data %d:&quot;</span>,count);<br>        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>,&amp;p-&gt;data);<br>        <span class="hljs-comment">//新节点与链表最后一个节点建立关系</span><br>        r-&gt;next=p;<br>        p-&gt;prior=r;<br>        <span class="hljs-comment">//r永远指向链表中最后一个节点，重点！！！！</span><br>        r=r-&gt;next;<br>    &#125;<br>    <span class="hljs-comment">//返回新创建的链表</span><br>    <span class="hljs-keyword">return</span> L;<br>&#125;<br><span class="hljs-type">void</span> <span class="hljs-title function_">display</span><span class="hljs-params">(DulNode * L)</span>&#123;<br>    DulNode *temp=L-&gt;next;<br>    <span class="hljs-keyword">while</span> (temp) &#123;<br>        <span class="hljs-comment">//如果该节点无后继节点，说明此节点是链表的最后一个节点</span><br>        <span class="hljs-keyword">if</span> (temp-&gt;next==<span class="hljs-literal">NULL</span>) &#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>,temp-&gt;data);<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &lt;-&gt; &quot;</span>,temp-&gt;data);<br>        &#125;<br>        temp=temp-&gt;next;<br>    &#125;<br>&#125;<br><br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">//创建一个头指针</span><br>    DulNode * L=<span class="hljs-literal">NULL</span>;<br>    <span class="hljs-comment">//调用链表创建函数</span><br>    L=initDulNode(L,<span class="hljs-number">5</span>);<br>    <span class="hljs-comment">//输出创建好的链表</span><br>    display(L);<br>    <span class="hljs-comment">//显示双链表的优点</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BC%96%E7%A8%8B/" class="category-chain-item">编程</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/C%E8%AF%AD%E8%A8%80/">#C语言</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>顺序表</div>
+      <div>http://example.com/2021/08/08/CH1 顺序表基本操作及实现（C）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Martin Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 8, 2021</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/08/09/XDU-Autumn/" title="Autumn_XDU">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Autumn_XDU</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/08/C%E8%AF%AD%E8%A8%80-%E9%A1%BA%E5%BA%8F%E8%A1%A8/" title="关于C语言的一些奇奇怪怪">
+                        <span class="hidden-mobile">关于C语言的一些奇奇怪怪</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.9},"log":false});</script></body>
+</html>
