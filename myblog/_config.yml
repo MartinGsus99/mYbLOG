@@ -105,7 +105,7 @@ live2d:
   debug: false
   model:
     # 推荐使用 CDN 来加载模型
-    use: live2d-widget-model-shizuku 
+    use: live2d-widget-model-koharu 
   display:
     position: left
     width: 150
