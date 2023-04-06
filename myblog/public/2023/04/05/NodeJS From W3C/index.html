@@ -1,0 +1,695 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Martin Wang">
+  <meta name="keywords" content="Love And Freedom">
+  
+    <meta name="description" content="Node JS From W3C一、NodeJS回调函数 异步编程依托于回调来实现； 回调函数完成任务后会被调用，Node使用了大量得回调函数，Node所有Api都支持回调函数； 例如，我们可以一边读取文件，一边执行其他命令，在文件读取完成后，我们将文件内容作为回调函数的参数返回。这样在执行代码时就没有阻塞或等待文件 I&#x2F;O 操作。这就大大提高了 Node.js 的性能，可以处理大量的并发请求。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Martin&#39;s Blog">
+<meta property="og:url" content="http://example.com/2023/04/05/NodeJS%20From%20W3C/index.html">
+<meta property="og:site_name" content="Martin&#39;s Blog">
+<meta property="og:description" content="Node JS From W3C一、NodeJS回调函数 异步编程依托于回调来实现； 回调函数完成任务后会被调用，Node使用了大量得回调函数，Node所有Api都支持回调函数； 例如，我们可以一边读取文件，一边执行其他命令，在文件读取完成后，我们将文件内容作为回调函数的参数返回。这样在执行代码时就没有阻塞或等待文件 I&#x2F;O 操作。这就大大提高了 Node.js 的性能，可以处理大量的并发请求。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-04-05T07:29:35.904Z">
+<meta property="article:modified_time" content="2023-04-05T08:35:12.085Z">
+<meta property="article:author" content="Martin Wang">
+<meta property="article:tag" content="Love And Freedom">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Martin&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Martin&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-05 15:29" pubdate>
+          April 5, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.1k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          51 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Node-JS-From-W3C"><a href="#Node-JS-From-W3C" class="headerlink" title="Node JS From W3C"></a>Node JS From W3C</h1><h2 id="一、NodeJS回调函数"><a href="#一、NodeJS回调函数" class="headerlink" title="一、NodeJS回调函数"></a>一、NodeJS回调函数</h2><blockquote>
+<p>异步编程依托于回调来实现；</p>
+<p>回调函数完成任务后会被调用，Node使用了大量得回调函数，Node所有Api都支持回调函数；</p>
+<p>例如，我们可以一边读取文件，一边执行其他命令，在文件读取完成后，我们将文件内容作为回调函数的参数返回。这样在执行代码时就没有阻塞或等待文件 I/O 操作。这就大大提高了 Node.js 的性能，可以处理大量的并发请求。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">function</span> <span class="hljs-title function_">foo1</span>(<span class="hljs-params">name,age,callback</span>)&#123;&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title function_">foo2</span>(<span class="hljs-params">value,callback1,callback2</span>)&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">//阻塞代码实例</span><br><span class="hljs-keyword">var</span> fs=<span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;fs&quot;</span>);<br><span class="hljs-keyword">var</span> data=fs.<span class="hljs-title function_">readFileSync</span>(<span class="hljs-string">&#x27;../../assets/test.txt&#x27;</span>);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data.<span class="hljs-title function_">toString</span>());<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;Program Ended&quot;</span>);<br><br><br><span class="hljs-comment">//非阻塞代码实例</span><br><span class="hljs-keyword">var</span> fs=<span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;fs&quot;</span>);<br>fs.<span class="hljs-title function_">readFile</span>(<span class="hljs-string">&#x27;../../assets/test.txt&#x27;</span>,<span class="hljs-keyword">function</span>(<span class="hljs-params">err,data</span>)&#123;<br>    <span class="hljs-keyword">if</span>(err) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(err);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data.<span class="hljs-title function_">toString</span>());<br>&#125;);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;Program Ended&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>第一个实例在文件读取完之后才执行；第二个实例我们不需要等待文件读取完；可以在读取文件的同时处理其他逻辑；</p>
+<h2 id="二、NodeJS事件循环"><a href="#二、NodeJS事件循环" class="headerlink" title="二、NodeJS事件循环"></a>二、NodeJS事件循环</h2><h3 id="1-events"><a href="#1-events" class="headerlink" title="1.events"></a>1.events</h3><blockquote>
+<p>NodeJS是单进程单线程应用程序，但是因为V8引擎提供得异步执行回调接口，通过这些接口可以处理大量并发，性能较高；</p>
+<p>Node.js 基本上所有的事件机制都是用设计模式中观察者模式实现。</p>
+<p>Node.js 单线程类似进入一个while(true)的事件循环，直到没有事件观察者退出，每个异步事件都生成一个事件观察者，如果有事件发生就调用该回调函数.</p>
+<p>Node.js使用事件驱动模型，当web server接收到请求，就把它关闭进行处理，然后服务下一个web请求；</p>
+<p>请求完成，放回处理队列，当到达队列开头，将结果返回给用户；</p>
+<p>webserver 一直接受请求而不等待任何读写操作。（这也称之为非阻塞式IO或者事件驱动IO）</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">//引入events模块；</span><br><span class="hljs-keyword">var</span> events=<span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;events&#x27;</span>);<br><span class="hljs-comment">//创建eventEmitter对象</span><br><span class="hljs-keyword">var</span> eventEmitter=<span class="hljs-keyword">new</span> events.<span class="hljs-title class_">EventEmitter</span>();<br><br><span class="hljs-comment">//绑定事件及事件得处理程序</span><br>eventEmitter.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;eventName&#x27;</span>,eventHandler);<br><br><span class="hljs-comment">//触发事件</span><br>eventEmitter.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&#x27;eventName&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">//引入events模块</span><br><span class="hljs-keyword">var</span> events=<span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;events&#x27;</span>);<br><span class="hljs-comment">//创建eventEmitter对象</span><br><span class="hljs-keyword">var</span> eventEmitter=<span class="hljs-keyword">new</span> events.<span class="hljs-title class_">EventEmitter</span>();<br><span class="hljs-comment">//创建事件处理程序</span><br><span class="hljs-keyword">var</span> connectHandler=<span class="hljs-keyword">function</span> <span class="hljs-title function_">connected</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;连接成功。&#x27;</span>);<br>    <span class="hljs-comment">//触发data_received事件</span><br>    eventEmitter.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&#x27;data_received&#x27;</span>);<br>&#125;<br><span class="hljs-comment">//绑定connection事件处理程序</span><br>eventEmitter.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;connection&#x27;</span>,connectHandler);<br><span class="hljs-comment">//使用匿名函数绑定data_received事件</span><br>eventEmitter.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;data_received&#x27;</span>,<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;数据接收成功。&#x27;</span>);<br>&#125;);<br><span class="hljs-comment">//触发connection事件</span><br>eventEmitter.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&#x27;connection&#x27;</span>);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;程序执行完毕。&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-Node是如何工作的？"><a href="#2-Node是如何工作的？" class="headerlink" title="2.Node是如何工作的？"></a>2.Node是如何工作的？</h3><blockquote>
+<p>Node应用程序中，执行异步操作得函数将回调函数作为最后一个参数，回调函数接受错误对象作为第一个参数；</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><br><span class="hljs-keyword">var</span> fs=<span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;fs&quot;</span>);<br><span class="hljs-comment">//将回调函数作为最后一个参数， 回调函数接收错误对象作为第一个参数。</span><br>fs.<span class="hljs-title function_">readFile</span>(<span class="hljs-string">&#x27;../../assets/test.txt&#x27;</span>,<span class="hljs-keyword">function</span>(<span class="hljs-params">err,data</span>)&#123;<br>    <span class="hljs-keyword">if</span>(err) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(err);<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(data.<span class="hljs-title function_">toString</span>());<br>&#125;);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;程序执行完毕&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-EventEmitter"><a href="#3-EventEmitter" class="headerlink" title="3.EventEmitter"></a>3.EventEmitter</h3><blockquote>
+<p>Node.js得所有异步I/O操作都会在完成时返回一个事件到事件队列；</p>
+<p>Node.js里面得许多对象都会分发事件，所有这些事件得对象都是events.EventEmitter的实例；</p>
+</blockquote>
+<h4 id="EventEmitter类：事件触发与事件监听器功能的封装"><a href="#EventEmitter类：事件触发与事件监听器功能的封装" class="headerlink" title="EventEmitter类：事件触发与事件监听器功能的封装"></a>EventEmitter类：事件触发与事件监听器功能的封装</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> <span class="hljs-title class_">EventEmitter</span>=<span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;events&#x27;</span>).<span class="hljs-property">EventEmitter</span>;<br><span class="hljs-keyword">var</span> event=<span class="hljs-keyword">new</span> <span class="hljs-title class_">EventEmitter</span>();<br>event.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;some_event&#x27;</span>,<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;some_event 事件触发&#x27;</span>);<br>&#125;);<br>event.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;some_event&#x27;</span>,<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;Martin wang 的事件触发了&quot;</span>);<br>&#125;);<br><span class="hljs-built_in">setTimeout</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>    event.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&#x27;some_event&#x27;</span>);<br>&#125;,<span class="hljs-number">1000</span>);<br></code></pre></td></tr></table></figure>
+
+<p>原理：event对象注册了事件some_event的一个监听器，然后1000ms后向event对象发送事件some_event此时调用其监听器；</p>
+<p>EventEmitter的每个事件由一个事件名和若干参数组成，事件名是一个字符串；每个事件支持若干个事件监听器；</p>
+<p>两个事件监听器回调函数被先后调用；</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> events=<span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;events&#x27;</span>);<br><span class="hljs-keyword">var</span> emitter=<span class="hljs-keyword">new</span> events.<span class="hljs-title class_">EventEmitter</span>();<br><br><span class="hljs-comment">//监听器1</span><br><span class="hljs-keyword">var</span> listener1=<span class="hljs-keyword">function</span> <span class="hljs-title function_">listener1</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;监听器listener1执行&#x27;</span>);<br>&#125;   <br><span class="hljs-comment">//监听器2</span><br><span class="hljs-keyword">var</span> listener2=<span class="hljs-keyword">function</span> <span class="hljs-title function_">listener2</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;监听器listener2执行&#x27;</span>);<br>&#125;<br><span class="hljs-comment">//绑定connection事件，处理函数为listener1   </span><br>emitter.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;connection&#x27;</span>,listener1);<br><span class="hljs-comment">//绑定connection事件，处理函数为listener2</span><br>emitter.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;connection&#x27;</span>,listener2);<br><span class="hljs-keyword">var</span> eventListeners=<span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;events&#x27;</span>).<span class="hljs-property">EventEmitter</span>.<span class="hljs-title function_">listenerCount</span>(emitter,<span class="hljs-string">&#x27;connection&#x27;</span>);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(eventListeners+<span class="hljs-string">&quot;个监听器监听连接事件。&quot;</span>);<br><span class="hljs-comment">//处理connection事件</span><br>emitter.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&#x27;connection&#x27;</span>);<br><span class="hljs-comment">//移除绑定的listener1函数   </span><br>emitter.<span class="hljs-title function_">removeListener</span>(<span class="hljs-string">&#x27;connection&#x27;</span>,listener1);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;listener1不再受监听。&quot;</span>);<br><span class="hljs-comment">//触发连接事件</span><br>emitter.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&#x27;connection&#x27;</span>);<br>eventListeners=<span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;events&#x27;</span>).<span class="hljs-property">EventEmitter</span>.<span class="hljs-title function_">listenerCount</span>(emitter,<span class="hljs-string">&#x27;connection&#x27;</span>);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(eventListeners+<span class="hljs-string">&quot;个监听器监听连接事件。&quot;</span>);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;程序执行完毕。&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-继承EventEmitter"><a href="#4-继承EventEmitter" class="headerlink" title="4.继承EventEmitter"></a>4.继承EventEmitter</h3><blockquote>
+<p>大多数时候我们不会直接使用 EventEmitter，而是在对象中继承它。包括 fs、net、 http 在内的，只要是支持事件响应的核心模块都是 EventEmitter 的子类。</p>
+<p>为什么要这样做呢？原因有两点：</p>
+<p>首先，具有某个实体功能的对象实现事件符合语义， 事件的监听和发生应该是一个对象的方法。</p>
+<p>其次 JavaScript 的对象机制是基于原型的，支持 部分多重继承，继承 EventEmitter 不会打乱对象原有的继承关系。</p>
+</blockquote>
+<h2 id="三、NodeJS-Buffer"><a href="#三、NodeJS-Buffer" class="headerlink" title="三、NodeJS Buffer"></a>三、NodeJS Buffer</h2><blockquote>
+<p>JS语言自身只有字符串数据类型，没有二进制数据类型；</p>
+<p>但是处理TCP流或者文件流时，必须使用二进制数据；因此NodeJS定义了一个Buffer类，创建一个专门存放二进制数据的缓存区；</p>
+</blockquote>
+<h3 id="1-Buffer与字符编码"><a href="#1-Buffer与字符编码" class="headerlink" title="1.Buffer与字符编码"></a>1.Buffer与字符编码</h3><blockquote>
+<p>Buffer实例一般用于表示编码字符的序列，比如UTF-8等；</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> buf=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(<span class="hljs-string">&#x27;hello world&#x27;</span>,<span class="hljs-string">&#x27;ascii&#x27;</span>);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(buf.<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;hex&#x27;</span>));<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(buf.<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;base64&#x27;</span>));<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-Buffer类"><a href="#2-Buffer类" class="headerlink" title="2.Buffer类"></a>2.Buffer类</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">//创建长度为10字节的Buffer实例</span><br><span class="hljs-keyword">const</span> buf1=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">alloc</span>(<span class="hljs-number">10</span>);<br><span class="hljs-comment">//创建长度为10字节，且用0填充的Buffer实例</span><br><span class="hljs-keyword">const</span> buf2=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">alloc</span>(<span class="hljs-number">10</span>,<span class="hljs-number">1</span>);<br><span class="hljs-comment">//创建长度为10字节，且未初始化的Buffer实例</span><br><span class="hljs-keyword">const</span> buf3=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">allocUnsafe</span>(<span class="hljs-number">10</span>);<br><span class="hljs-comment">//创建一个包含[0x1,0x2,0x3]的Buffer实例</span><br><span class="hljs-keyword">const</span> buf4=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>([<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]);<br><span class="hljs-comment">//创建一个包含UTF-8字节[0x74,0x65,0x73,0x74]的Buffer实例</span><br><span class="hljs-keyword">const</span> buf5=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(<span class="hljs-string">&#x27;test&#x27;</span>);<br><span class="hljs-comment">//创建一个包含Latin-1字节[0x74,0x65,0x73,0x74]的Buffer实例</span><br><span class="hljs-keyword">const</span> buf6=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(<span class="hljs-string">&#x27;test&#x27;</span>,<span class="hljs-string">&#x27;latin1&#x27;</span>);<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-写入缓冲区"><a href="#3-写入缓冲区" class="headerlink" title="3.写入缓冲区"></a>3.写入缓冲区</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs js">buf.<span class="hljs-title function_">write</span>(string[,offset[,length]][,encoding])<br><span class="hljs-comment">// string 字符串</span><br><span class="hljs-comment">// offset 开始写入的索引值</span><br><span class="hljs-comment">// length 写入的字节数</span><br><span class="hljs-comment">// encoding 编码方式</span><br>buf.<span class="hljs-title function_">write</span>(<span class="hljs-string">&#x27;hello world&#x27;</span>);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(buf.<span class="hljs-title function_">toString</span>());<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(buf.<span class="hljs-title function_">toJSON</span>());<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(buf.<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;base64&#x27;</span>));<br><span class="hljs-comment">//缓冲区合并</span><br><span class="hljs-keyword">const</span> buffer1=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>((<span class="hljs-string">&#x27;菜鸟教程&#x27;</span>));<br><span class="hljs-keyword">const</span> buffer2=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>((<span class="hljs-string">&#x27;www.runoob.com&#x27;</span>));<br><span class="hljs-keyword">const</span> buffer3=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">concat</span>([buffer1,buffer2]);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;buffer3 内容: &quot;</span>+buffer3.<span class="hljs-title function_">toString</span>());<br><span class="hljs-comment">//缓冲区比较</span><br><span class="hljs-keyword">const</span> buffer4=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(<span class="hljs-string">&#x27;ABC&#x27;</span>);<br><span class="hljs-keyword">const</span> buffer5=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(<span class="hljs-string">&#x27;ABCD&#x27;</span>);<br><span class="hljs-keyword">const</span> result=buffer4.<span class="hljs-title function_">compare</span>(buffer5);<br><span class="hljs-keyword">if</span>(result&lt;<span class="hljs-number">0</span>)&#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(buffer4+<span class="hljs-string">&quot;在&quot;</span>+buffer5+<span class="hljs-string">&quot;之前&quot;</span>);<br>&#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(result==<span class="hljs-number">0</span>)&#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(buffer4+<span class="hljs-string">&quot;与&quot;</span>+buffer5+<span class="hljs-string">&quot;相同&quot;</span>);<br>&#125;<span class="hljs-keyword">else</span>&#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(buffer4+<span class="hljs-string">&quot;在&quot;</span>+buffer5+<span class="hljs-string">&quot;之后&quot;</span>);<br>&#125;<br><span class="hljs-comment">//拷贝缓冲区</span><br><span class="hljs-keyword">const</span> buffer6=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(<span class="hljs-string">&#x27;ABC&#x27;</span>);<br><span class="hljs-comment">//拷贝一个缓冲区</span><br><span class="hljs-keyword">const</span> buffer7=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">alloc</span>(<span class="hljs-number">3</span>);<br>buffer6.<span class="hljs-title function_">copy</span>(buffer7);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;buffer7 content: &quot;</span>+buffer7.<span class="hljs-title function_">toString</span>());<br><span class="hljs-comment">//缓冲区裁剪</span><br><span class="hljs-keyword">const</span> buffer8=<span class="hljs-title class_">Buffer</span>.<span class="hljs-title function_">from</span>(<span class="hljs-string">&#x27;runoob&#x27;</span>);<br><span class="hljs-comment">//剪切缓冲区</span><br><span class="hljs-keyword">const</span> buffer9=buffer8.<span class="hljs-title function_">slice</span>(<span class="hljs-number">0</span>,<span class="hljs-number">2</span>);<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;buffer9 content: &quot;</span>+buffer9.<span class="hljs-title function_">toString</span>());<br></code></pre></td></tr></table></figure>
+
+<p>方法名参考JS的字符串处理；</p>
+<h2 id="四、NodeJS-Stream"><a href="#四、NodeJS-Stream" class="headerlink" title="四、NodeJS Stream"></a>四、NodeJS Stream</h2><blockquote>
+<p>Stream是一个抽象接口，node中很多对象实现了这个接口；</p>
+<p>例如对http服务器发起请求的request对象就是一个stream还有stdout；</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>http://example.com/2023/04/05/NodeJS From W3C/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>Martin Wang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>April 5, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/06/Linux%20Shell/" title="Linux Shell">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux Shell</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/04/Sakura/" title="摄影日常">
+                        <span class="hidden-mobile">摄影日常</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.9},"log":false});</script></body>
+</html>
