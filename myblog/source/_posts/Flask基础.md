@@ -7,6 +7,7 @@ tags:
   - Flask
   - 笔记
   - Python
+
 mp3:
 cover: img/bg3.jpg
 ---
@@ -80,15 +81,15 @@ if __name__ == '__main__':
 - path：接受用作目录分隔符的斜杠
 
   ```python
-
+  
   @app.route('/user/<int:id>')
   def getUserID(id):
       return '<h1>Hello,%d!</h1>'%id
-
+  
   @app.route('/user/<float:id>')
   def getUserID2(id):
       return '<h1>Hello,%f!</h1>'%id
-
+  
   @app.route('/user/<path:id>')
   def getUserID3(id):
       return '<h1>Hello,%s!</h1>'%id
@@ -180,10 +181,9 @@ Flask 将尝试在 templates 文件夹中找到与此脚本所在的文件夹中
 
 Jinja2 使用一下定界符从 HTML 转义：
 
-- {% ... %} for statements
-
-- {{ ... }} for expression to print to the template output
-- {# ... #} for comments not included in the template output
+{.% ... %.} for statements
+{.{ ... }.} for expression to print to the template output
+{# ... #} for comments not included in the template output
 
 ```html
 <!DOCTYPE html>
@@ -231,6 +231,317 @@ Jinja2 使用一下定界符从 HTML 转义：
 
 ### 7. 将表单数据发送到模板
 
+```py
+from flask import Flask,request,render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def student():
+    return render_template('student.html')
+  
+@app.route('/result',methods = ['POST', 'GET'])
+def result():
+    if request.method == 'POST':
+        result = request.form
+        return render_template("result.html",result = result)
+      
+if __name__ == '__main__':
+  app.run(debug = True)
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form action="http://127.0.0.1:5000/result" method="POST">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name"><br><br>
+    <label for="age">Age:</label>
+    <input type="text" id="age" name="age"><br><br>
+    <label for="job">Job:</label>
+    <input type="text" id="job" name="job"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+</body>
+
+</html>
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <table>
+    {% for key, value in result.items() %}
+    <tr>
+      <th> {{ key }} </th>
+      <td> {{ value }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+
+</html>
+```
+
+### 8.Flask Cookies
+
+Cookie以文本形式存储在客户端的计算机上，目的是记住与客户使用相关的数据，以获得更好的访问者体验和网站统计信息；
+
+Request对象包含cookie得属性，它是所有得cookie变量及其对应值得字典对象。
+
+Flask中处理Cookie得步骤为：
+
+1. 设置cookie
+
+```py
+resp=make_response("success")
+resp.set_cookie("martin","martin",max_age=3600)
+```
+
+2. 获取cookie
+
+```py
+cookie=request.cookies.get("martin")
+```
+
+3. 删除cookie（让cookie过期）
+
+```py
+resp=make_response("del martin")
+resp.delete_cookie("martin")
+```
+
+### 9. Flask Session
+
+Session数据存储在服务器。事客户端登录到服务器并注销服务器的时间间隔。需要在该会话中保存的数据会存储到服务器上的临时目录中。
+
+为每个客户端得会话分配会话ID，会话数据存储在cookie得顶部，服务器以加密方式对其签名。
+
+Session对象也是一个字典对象，包括会话变量和关联值得键值对；
+
+```py
+from flask import Flask,request,session,redirect,url_for,flash
+from flask import abort,make_response
+from flask import render_template
+
+app=Flask(__name__)
+
+app.secret_key='990526'
+
+
+@app.route('/')
+def index():
+    if 'username' in session:
+        username=session['username']
+        return 'Logged in as '+username+'<br>'+\
+            "<b><a href='/logout'>click here to log out</a></b>"
+    return "You are not logged in <br><a href='/login'></b>"+\
+        "click here to log in</b></a>"
+
+@app.route('/login',methods=['GET','POST'])
+def login():
+    if request.method=='POST':
+        session['username']=request.form['username']
+        return redirect(url_for('index'))
+    return '''
+        <form action="" method="post">
+            <p><input type=text name=username>
+            <p><input type=submit value=Login>
+        </form>
+    '''
+
+@app.route('/logout')
+def logout():
+    session.pop('username',None)
+    return redirect(url_for('index'))
+  
+if __name__=='__main__':
+    app.run(debug=True)
+```
+
+### 10. Flask重定向和错误
+
+> Flask类有一个redirect（）函数，调用时，返回一个响应对象，并将用户重定向到具有指定状态代码的另一个目标位置。
+
+```py
+Flask.redirect(location,statuscode,response)
+```
+
+- location:重定向响应得url
+- statuscode：发送到浏览器标头，默认302
+- response：用于实例化响应
+
+> Flask类具有带有错误代码的abort()函数
+
+```py
+Flask.abort(code)
+```
+
+Code为以下之一：
+
+- 400 错误请求
+- 401 未进行身份认证
+- 403 Forbidden
+- 404 未找打
+- 406 不接收
+- 415 不支持的媒体类型
+- 429 请求过多
+
+```py
+@app.route('/login',methods = ['POST', 'GET'])
+def login():
+   if request.method == 'POST':
+      if request.form['username'] == 'admin' :
+         return redirect(url_for('success'))
+      else:
+         abort(401)
+   else:
+      return redirect(url_for('index'))
+```
+
+### 11.Flask消息闪现
+
+Flask提供了一个非常简单得方法来使用闪现系统向用户反馈信息。
+
+在一个请求结束时记录一个信息，并且在下次请求时访问它，通常与布局模板结合以公开信息。
+
+Flask框架得闪现系统可以在一个视图中创建消息，并在名为next得试图函数中呈现他。
+
+Flask模块包含flash（）方法，将消息传递给下一个请求，请求通常为模板；
+
+```
+flash(message,category)
+```
+
+- message:闪现的实际消息
+- category：error | info | warning
+
+从会话中删除消息，模板调用get_flashed_messages()
+
+### 12.Flask Sqlite
+
+Flask中使用特殊得g对象可以使用before_request()和teardown_request()在请求开始前打开数据库连接，请求结束之后关闭连接；
+
+```py
+import sqlite3
+from flask import g,Flask
+
+DATABASE='../database.db'
+
+app=Flask(__name__)
+
+def connect_db():
+    return sqlite3.connect(DATABASE)
+
+@app.before_request
+def before_request():
+    g.db=connect_db()
+  
+@app.teardown_request
+def teardown_request(exception):
+    if hasattr(g,'db'):
+        g.db.close()
+```
+
+#### 按需连接
+
+上述方式在Flask执行请求前处理器才有效。如果在脚本或者Python解释器中，必须使用：
+
+```py
+with app.test_request_context():
+	app.preprocess_request()
+```
+
+#### 简化查询
+
+```py
+for user in query_db("select * from users")
+	print user['username'],'has the id',user['user_id']
+```
+
+只需要单一结果的用法：
+
+```py
+user=query_db('select * from users where username=?',[the_username],one=true)
+
+if user is None:
+    	print 'No such user'
+    else:
+        print the_username,'has the id',user['user_id']
+```
+
+如果要给 SQL 语句传递参数，请在语句中使用问号来代替参数，并把参数放在一个列表中 一起传递。不要用字符串格式化的方式直接把参数加入 SQL 语句中，这样会给应用带来 [SQL 注入](http://en.wikipedia.org/wiki/SQL_injection) 的风险。
+
+### 13. Flask文件上传
+
+Flask中处理文件上传非常简单，需要一个HTML表单，其enctype属性设置为`multipart/form-data`，将文件发布到URL
+
+URL处理程序从`request.files[]`对象提取文件，保存到所需位置；
+
+上传的文件首先保存到服务器上的临时位置，然后实际保存到最终位置；
+
+```
+app.config['UPLOAD_FOLDER']定义文件上传文件夹的位置
 ```
 
 ```
+app.config['MAX_CONTENT_LENGTH']指懂要上传文件的最大大小（字节）
+```
+
+> py文件不嫩放到views文件下
+
+### 14.Flask部署
+
+开发服务器上的APP只能在设置了开发环境的计算机上访问，这是一种默认i行为，因为在调试模式下，用户可以在计算机上执行任意代码。
+
+如果禁用了debug，则可以将主机名设置为‘0.0.0.0’，使本地计算机上得开发服务器可供网络上的用户使用。
+
+```
+app.run(host='0.0.0.0')
+```
+
+#### 部署
+
+要从开发环境切换到成熟得生产环境，需要在真是得web服务器上部署应用程序
+
+#### mod_wsgi
+
+是一个Apache模块，它提供了一个WSGI兼容接口，用于在Apache服务器上托管基于Python得web应用程序。
+
+```
+pip install mod_wsgi
+mod_wsgi-express start-server
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
