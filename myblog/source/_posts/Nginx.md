@@ -1,10 +1,21 @@
+---
+title: Nginx
+date: 2023-07-06 08:51:45
+categories:
+  - Nginx
+tags:
+  - Nginx
+mp3:
+cover: img/bg13.jpg
+---
+
 # Nginx
 
 ## 一、简介
 
-- Web服务器
-- 解决C10K问题
-- 最大5w个并发连接
+- Web 服务器
+- 解决 C10K 问题
+- 最大 5w 个并发连接
 
 ## 二、基本使用
 
@@ -34,15 +45,15 @@ reopen
 nginx -t
 ```
 
-master进程：负责读取和验证配置文件，管理woker进程，一个
+master 进程：负责读取和验证配置文件，管理 woker 进程，一个
 
-worker进程：负责处理实际请求，多个
+worker 进程：负责处理实际请求，多个
 
 ![](https://s3.bmp.ovh/imgs/2023/07/06/0fd07985cc88f932.png)
 
 ### 2.静态网站
 
-HEXO搭建博客，略
+HEXO 搭建博客，略
 
 ### 3.配置文件
 
@@ -57,13 +68,13 @@ events{
 
 http{
     include mime.types   //包含相应的文件处理方法
-    
+
     server{
-    
+
 	}
 
 	server{
-        
+
     }
 
 	include servers/*   //保存单个server配置文件
@@ -76,7 +87,7 @@ http{
 - 正向代理：代理客户端
 - 反向代理：代理服务端
 
-多个服务器对一个域名，隐藏服务器真实IP
+多个服务器对一个域名，隐藏服务器真实 IP
 
 ```js
 upstream backend{
@@ -89,25 +100,10 @@ upstream backend{
 
 server{
     location /app{
-        proxy_pass http://backend;	
+        proxy_pass http://backend;
     }
 }
 //默认轮询访问三个服务器
 ```
 
 ### 5.Https
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
