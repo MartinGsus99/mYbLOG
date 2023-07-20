@@ -531,7 +531,9 @@ pip install mod_wsgi
 mod_wsgi-express start-server
 ```
 
+### 15. Flask FaskCGI
 
+FastCGi是Nginx,Lighttpd和Cherokee等服务器上的Flask应用程序
 
 
 
