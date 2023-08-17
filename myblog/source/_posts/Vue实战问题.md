@@ -1,28 +1,25 @@
 ---
 title: Vue笔记
 date: 2020-11-29 21:18:45
-categories: 
-    - 前端
-tags: 
-    - VUE
-    - 笔记
-mp3: 
+categories:
+  - 前端
+tags:
+  - VUE
+  - 笔记
+mp3:
 cover: img/vue.png
 ---
 
+Vue 实战问题
 
-Vue实战问题
+- [ ] 1.VScode 中部分组件调用显示蓝色，部分显示红色？
 
-- [ ] 1.VScode中部分组件调用显示蓝色，部分显示红色？
+- [x] 2.标签组件出现 Bug,无法显示标题，有待解决；
 
-- [x] 2.标签组件出现Bug,无法显示标题，有待解决；
+CSS 特性
 
-CSS特性
-
-1. cursor规定要显示的光标的类型，此处pointer为一只手
+1. cursor 规定要显示的光标的类型，此处 pointer 为一只手
 2. CSS 框模型概述
-
-
 
 ![CSS 框模型](https://www.w3school.com.cn/i/ct_boxmodel.gif)
 

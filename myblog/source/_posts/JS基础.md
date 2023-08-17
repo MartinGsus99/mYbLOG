@@ -831,6 +831,71 @@ console.log(ins.age);		//29
 
 
 
+## 十三、事件
+
+- 理解事件流
+- 使用事件处理程序
+- 不同的事件类型
+
+JS和HTML之间的交互通过事件实现。使用侦听器预订事件以便事件发生时执行相应的代码。
+
+### 1.事件流
+
+事件流描述的是从页面接受事件的顺序。
+
+IE事件冒泡流  Netscape Communicator事件捕获流
+
+#### 1.1事件冒泡
+
+事件由最具体的元素接收，逐级上传到不具体的结点。
+
+```html
+<!DOCTYPE html> 
+<html> 
+<head> 
+ <title>Event Bubbling Example</title> 
+</head> 
+<body> 
+ <div id="myDiv">Click Me</div> 
+</body> 
+</html> 
+```
+
+click div元素：
+$$
+div=>body=>html=>document
+$$
+
+#### 1.2事件捕获
+
+从不太具体的节点接收到事件，最具体的节点应该最后接受到事件。事件捕获的用意在于在事件到达预定目标之前捕获他。
+$$
+doucment=>html=>body=>div
+$$
+DOM2级事件规范要求document对象开始传播，但是IE9\Chrome\Safari都是冲windows对象捕获
+
+#### 1.3事件流
+
+$$
+事件捕获=>处于目标=>事件冒泡
+$$
+
+### 2.事件处理程序
+
+事件处理程序名字以`on`开头，`click`、`load`、`mouseover`都是事件，事件处理程序对应`onclick`
+
+#### 2.1 HTML事件处理程序
+
+
+
+
+
+
+
+
+
+
+
 
 
 

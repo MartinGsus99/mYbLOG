@@ -27,6 +27,7 @@ cover: img/bg3.jpg
 1. 安装虚拟环境
 
 ```shell
+conda create -n 环境名 python=3.6
 pip install virtualenv
 sudo apt-get install virtualenv
 ```
