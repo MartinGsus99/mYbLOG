@@ -227,3 +227,136 @@ export class Observer {
   }
 }
 ```
+
+### 4.将拦截器方法挂载到数组的属性上
+
+> 如果不能使用_proto_就直接将arrayMethods身上的方法设置到被侦测的数组上
+
+### 5.如何收集数组依赖？
+
+```js
+{
+	list:[1,2,3,4,5]	
+}
+```
+
+> 其实不管value是什么，只要是object的某个属性的数据，肯定通过key来读取数据，这就会触发getter
+
+```js
+import { Observer } from "./ArrayObserver"
+
+function defineReactive (data, key, val) {
+  if (typeof val === 'object') new Observer(val)
+  let dep = new Dep()
+  Object.defineProperty(data, key, {
+    enumerable: true,
+    configurable: true,
+    get: function () {
+      dep.depend()
+      return val
+    },
+    set: function (newVal) {
+      if (val === newVal) {
+        return
+      }
+      dep.notify()
+      val = newVal
+    }
+  })
+}
+```
+
+#### 收集依赖
+
+```js
+
+```
+
+
+
+## 五、虚拟DOM
+
+> Vue，Aug，RT都是声明式操作DOM
+
+为了把状态渲染在DOM上，有时需要更新DOM，最简单的方法，删除所有DOM重新生成一个DOM。
+
+代价昂贵->仅仅删除需要的DOM
+
+- Angular使用脏检查
+- React使用虚拟DOM
+- Vue细粒度绑定
+
+虚拟DOM的方式是通过状态生成一个虚拟节点树，使用虚拟节点渲染树，渲染之前会使用新生成的虚拟节点树和上一次生成的虚拟节点数进行比对，只渲染不同的部分。
+
+### 1.为什么引入虚拟DOM？
+
+Angular和React的变化侦测有一个共同点，他们不知道那些状态更新，因此进行暴力比对。
+
+VUE一定程度上知道那些状态发生变化。代价是粒度太细每一个绑定都会有一个watcher来观察状态变化，会有内存开销。
+
+VUE2使用组件级别的watcher实例，状态发生变化时仅仅通知到组件，然后组件内部进行虚拟DOM对比和渲染。
+
+### 2.虚拟DOM比对算法Patch
+
+
+
+## 六、VNODE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
