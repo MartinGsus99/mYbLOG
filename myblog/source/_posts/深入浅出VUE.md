@@ -274,6 +274,8 @@ function defineReactive (data, key, val) {
 
 
 
+# 虚拟DOM
+
 ## 五、虚拟DOM
 
 > Vue，Aug，RT都是声明式操作DOM
@@ -301,6 +303,189 @@ VUE2使用组件级别的watcher实例，状态发生变化时仅仅通知到组
 
 
 ## 六、VNODE
+
+### 1.什么是vnode？
+
+> vuejs中存在一个vnode类，可以实例化不同类型的vnode实例，不同类型的实例表示不同类型的dom元素。
+>
+> 本质上是一个JS普通的对象，是从VNode类实例化的对象。
+
+### 2.VNode的作用
+
+- 每次渲染视图时都是先创建vnode，然后用它创建真实DOM插入到页面中，所以可以将上次渲染的vnode缓存起来，下次渲染可以进行比对。
+- vue目前使用中等颗粒度，当状态发生变化时，只通知到组件及别，然后组件内使用虚拟DOM渲染视图
+- 以组件为单位进行重新渲染。
+
+### 3.VNode类型
+
+- 注释
+- 文本
+- 元素
+- 组件
+- 函数式组件
+- 克隆节点：将现有节点属性赋值到新节点，作用是优化静态节点和插槽节点，用于复制不需要重新传染的node
+
+## 七、patch
+
+> 虚拟DOM最核心的就是patcj，可以将vnode渲染成真实DOM
+>
+> Ptach也可以叫做patching算法，通过它渲染真实DOM，是通过对比结果找出需要更新的DOM
+>
+> DOM操作的执行速度远不如JS的运算速度快，因此把大量的DOM操作搬运到JS中，使用patching来计算出真正需要更新的节点，最大幅度减少DOM操作，从而显著提升性能。
+
+### 1. patch介绍
+
+对DOM修改需要三件事：
+
+- 创建新增节点
+- 删除已经废弃的节点
+- 修改需要更新的节点
+
+#### 新增节点
+
+- 首次加载时，不存在oldVNode，因此使用新的vnode
+- 新旧节点不同时，使用新vnode替换
+
+#### 删除节点
+
+- 新的vnode不存在的结点都删除
+- 当新vnode和旧vnode完全不是一个节点时，先插入再删除
+
+#### 更新结点
+
+- 当新旧两个结点是相同结点时，需要进行更细致的对比，然后对oldVnode在视图中对应的真实结点进行更新。
+
+#### 创建节点
+
+事实上，只有三种类型的节点会被创建并插入到DOM中，元素节点、注释节点、和文本节点；
+
+- 判断vnode是否为元素节点，只需要判断有无tag属性即可。调用createElement方法来创建真实元素节点。最后插入指定父节点。
+- 将元素渲染到视图：调用parentNode.appendChild()方法即可。再插入新节点的子结点。
+- 注释节点有唯一的标识属性`isCOmment`
+
+
+
+### 2删除节点
+
+```js
+function removeVnodes (vnodes, startIdx, endIdx) {
+  for (; startIdx <= endIdx; ++startIdx) {
+    const ch = vnodes[startIdx]
+    if (isDef(ch)) {
+      removeVnode(ch.elm)
+    }
+  }
+}
+
+const nodeOps = {
+  removeChild (node, child) {
+    node.removeChild(child)
+  }
+}
+
+function removeVnode (el) {
+  const parent = nodeOps.parentNode(el)
+  if (isDef(parent)) {
+    nodeOps.removeChild(parent, el)
+  }
+}
+```
+
+##### 为什么不直接使用parent.removeChild(child)删除节点而是封装成函数放在nodeOps中？
+
+> 涉及到跨平台渲染的知识，阿里的Weex可以使用相同的组件模型为iOS和Andriod编写原生渲染的应用。
+>
+> 而跨平台渲染的本质时在设计框架时，让框架的渲染机制和DOM解耦，只要把框架更新DOM的节点操作进行封装时，就可以实现跨平台渲染。
+
+### 3.更新节点
+
+- 静态节点
+
+如果新旧节点是静态节点，则不需要进行更新，直接跳过更新节点的过程。
+
+静态节点就是：一旦渲染到界面就不会随状态发生变化
+
+- 新虚拟节点有文本属性
+
+如果新生成的vnode有text属性，那么不管之前旧节点的子节点是什么，直接调用setTextContent方法来将视图中DOM节点内容更改为虚拟节点所保存的文字
+
+- 新虚拟节点无文本属性
+
+无text属性，则为元素节点
+
+> 有children，需要比对
+>
+> 无children，删除就完事了
+
+### 4.更新子结点
+
+
+
+# 模板编译原理
+
+> 模板给与了很大的能力
+>
+> vue创建HTML除了模板，还有手动写渲染函数来创建，使用jsx来创建HTML
+
+## 八、模板编译
+
+![](https://s3.bmp.ovh/imgs/2023/08/18/3209f200cf5fb938.png)
+
+> vuejs提供了模板语法，允许声明式描述状态和DOM之间的绑定关系。
+
+### 1.概念
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
